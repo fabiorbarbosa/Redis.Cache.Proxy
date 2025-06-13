@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Redis.Cache.Proxy.Infra" />
-    <InternalsVisibleTo Include="Redis.Cache.Proxy.Services" />
+    <InternalsVisibleTo Include="Redis.Cache.Proxy.Application" />
   </ItemGroup>
 
 </Project>

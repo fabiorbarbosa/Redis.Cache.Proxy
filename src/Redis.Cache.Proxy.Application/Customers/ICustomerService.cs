@@ -1,6 +1,6 @@
-using Redis.Cache.Proxy.Services.Models;
+using Redis.Cache.Proxy.Application.Models;
 
-namespace Redis.Cache.Proxy.Services.Customers;
+namespace Redis.Cache.Proxy.Application.Customers;
 
 public interface ICustomerService
 {

@@ -1,7 +1,7 @@
 using Redis.Cache.Proxy.Data.Repositories;
-using Redis.Cache.Proxy.Services.Models;
+using Redis.Cache.Proxy.Application.Models;
 
-namespace Redis.Cache.Proxy.Services.Customers;
+namespace Redis.Cache.Proxy.Application.Customers;
 
 internal class CustomerService(ICustomerRepository customerRepository) : ICustomerService
 {

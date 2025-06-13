@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redis.Cache.Proxy.Api", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redis.Cache.Proxy.Data", "src\Redis.Cache.Proxy.Data\Redis.Cache.Proxy.Data.csproj", "{4C7339A3-5E3A-4255-B8D6-34FF676ED785}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redis.Cache.Proxy.Services", "src\Redis.Cache.Proxy.Services\Redis.Cache.Proxy.Services.csproj", "{7A15E6D1-2A2C-4298-86B5-B0EF196784EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redis.Cache.Proxy.Application", "src\Redis.Cache.Proxy.Application\Redis.Cache.Proxy.Application.csproj", "{7A15E6D1-2A2C-4298-86B5-B0EF196784EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redis.Cache.Proxy.Infra", "src\Redis.Cache.Proxy.Infra\Redis.Cache.Proxy.Infra.csproj", "{C3ED1FF2-802C-4D04-B757-1E05591A6A4F}"
 EndProject
@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redis.Cache.Proxy.CrossCutt
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - API", "1 - API", "{5AE0E60C-25C4-C972-8432-9928A14C657E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Services", "2 - Services", "{7F65C81D-FA18-6A51-61A9-5630C9614E64}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Application", "2 - Application", "{7F65C81D-FA18-6A51-61A9-5630C9614E64}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Data", "3 - Data", "{21979779-2E6F-A2D6-5CB9-398D3C28A274}"
 EndProject

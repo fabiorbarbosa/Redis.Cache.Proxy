@@ -1,4 +1,4 @@
-namespace Redis.Cache.Proxy.Services.Models;
+namespace Redis.Cache.Proxy.Application.Models;
 
 public class CustomerModel
 {

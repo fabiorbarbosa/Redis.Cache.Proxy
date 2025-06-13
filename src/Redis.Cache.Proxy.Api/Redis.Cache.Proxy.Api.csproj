@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Redis.Cache.Proxy.Infra\Redis.Cache.Proxy.Infra.csproj" />
-    <ProjectReference Include="..\Redis.Cache.Proxy.Services\Redis.Cache.Proxy.Services.csproj" />
+    <ProjectReference Include="..\Redis.Cache.Proxy.Application\Redis.Cache.Proxy.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
