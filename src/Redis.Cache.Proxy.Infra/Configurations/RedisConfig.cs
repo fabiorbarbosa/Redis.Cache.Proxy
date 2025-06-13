@@ -16,9 +16,8 @@ internal static class RedisConfig
     /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddRedis(this IServiceCollection services, string connectionString)
     {
-        // builder.Services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect("localhost"));
-
         services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(connectionString));
+
         return services;
     }
 
@@ -37,17 +36,21 @@ internal static class RedisConfig
         services.AddScoped(provider =>
         {
             if (!typeof(TInterface).IsInterface)
+            {
                 throw new ArgumentException($"Type {typeof(TInterface).FullName} must be an interface.");
+            }
 
-            var redis = provider.GetRequiredService<IConnectionMultiplexer>() ?? throw new InvalidOperationException("Could not resolve Redis connection.");
-            var db = redis.GetDatabase() ?? throw new InvalidOperationException("Could not resolve Redis database.");
-            var implementation = provider.GetRequiredService<TImplementation>() ?? throw new InvalidOperationException($"Could not resolve implementation of {typeof(TImplementation).FullName}");
-            var attrImpl = typeof(TImplementation).GetCustomAttribute<RedisCachedAttribute>() ?? throw new InvalidOperationException($"Type {typeof(TImplementation).FullName} must have a RedisCachedAttribute.");
-            var proxy = DispatchProxy.Create<TInterface, RedisCachingProxy<TInterface>>();
+            var redis = provider.GetRequiredService<IConnectionMultiplexer>()
+                ?? throw new InvalidOperationException("Could not resolve Redis connection.");
+            var db = redis.GetDatabase()
+                ?? throw new InvalidOperationException("Could not resolve Redis database.");
+            var implementation = provider.GetRequiredService<TImplementation>()
+                ?? throw new InvalidOperationException($"Could not resolve implementation of {typeof(TImplementation).FullName}");
+            var attrImpl = typeof(TImplementation).GetCustomAttribute<RedisCachedAttribute>()
+                ?? throw new InvalidOperationException($"Type {typeof(TImplementation).FullName} must have a RedisCachedAttribute.");
 
-            RedisProxyFactory.CreateWithRedisCache(implementation, db, attrImpl.Expiration);
-
-            return proxy;
+            return RedisProxyFactory.CreateWithRedisCache<TInterface, TImplementation>(
+                implementation, db, attrImpl.Expiration); ;
         });
 
         return services;

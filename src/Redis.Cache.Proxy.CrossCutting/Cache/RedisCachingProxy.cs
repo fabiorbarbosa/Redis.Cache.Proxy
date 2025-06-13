@@ -32,8 +32,7 @@ internal class RedisCachingProxy<T> : DispatchProxy
     {
         ArgumentNullException.ThrowIfNull(targetMethod);
 
-        if (targetMethod.ReturnType == typeof(Task) ||
-            (targetMethod.ReturnType.IsGenericType && targetMethod.ReturnType.GetGenericTypeDefinition() == typeof(Task<>)))
+        if (targetMethod.ReturnType == typeof(Task))
         {
             var method = typeof(RedisCachingProxy<T>)
                 .GetMethod(nameof(InvokeAsyncWithoutResult), BindingFlags.NonPublic | BindingFlags.Instance);
@@ -62,7 +61,7 @@ internal class RedisCachingProxy<T> : DispatchProxy
         }
 
         var result = method.Invoke(_decorated, args);
-        _redis.StringSet(cacheKey, JsonSerializer.Serialize(result), _expiration ?? DefaultExpiration);
+        _redis.StringSet(cacheKey, JsonSerializer.Serialize(result), _expiration);
 
         return result;
     }
@@ -85,8 +84,8 @@ internal class RedisCachingProxy<T> : DispatchProxy
 
         var taskExec = (Task<TResult>)method.Invoke(_decorated, args!)!;
         var result = await taskExec.ConfigureAwait(false);
-
-        await _redis.StringSetAsync(JsonSerializer.Serialize(result), cacheKey, DefaultExpiration);
+        var setOk = await _redis.StringSetAsync(cacheKey, JsonSerializer.Serialize(result), DefaultExpiration);
+        Console.WriteLine($"[Cache SET] Key={cacheKey}, Success={setOk}");
 
         return result;
     }
