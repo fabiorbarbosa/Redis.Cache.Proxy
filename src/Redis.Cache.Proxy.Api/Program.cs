@@ -28,7 +28,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseHsts();
-    app.MapOpenApi();
+    app.MapOpenApi().CacheOutput(options =>
+    {
+        options.Expire(TimeSpan.FromMinutes(10));
+    });
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/openapi/v1.json", "Redis Cache Proxy API Cities");
@@ -46,17 +49,13 @@ app.MapGet("/cities/{city}", async ([FromRoute] string city, ICustomerService cu
 {
     var result = await customerService.GetByCityAsync(city);
     return Results.Ok(new { Total = result.Count(), Cities = result });
-})
-.WithName("GetClientesByCity")
-.WithOpenApi();
+});
 
 // Endpoint to get all clients
 app.MapGet("/cities", async (ICustomerService customerService) =>
 {
     var result = await customerService.GetAllAsync();
     return Results.Ok(new { Total = result.Count(), Cities = result });
-})
-.WithName("GetAllClientes")
-.WithOpenApi();
+});
 
 await app.RunAsync();

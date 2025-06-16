@@ -3,6 +3,7 @@ using StackExchange.Redis;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json;
+using Redis.Cache.Proxy.CrossCutting.Shared.Extensions;
 
 namespace Redis.Cache.Proxy.CrossCutting.Cache;
 
@@ -94,14 +95,15 @@ internal class RedisCachingProxy<T> : DispatchProxy
     {
         if (args?.Length == 1 && args[0] is LambdaExpression expr)
         {
-            var visitor = new ExpressionKeyVisitor();
-            visitor.Visit(expr);
-
-            var exprKey = visitor.GetKey();
-            return $"repo:{typeof(T).Name}:{method.Name}:expr:{exprKey}";
+            var exprKey = expr.GetKeyExpression();
+            return $"repo:{typeof(T).Name}:{method.Name}:expr:{exprKey}".ToLower();
         }
 
-        var argString = string.Join("_", (args ?? []).Where(a => a is not null).Select(a => a?.ToString() ?? string.Empty));
+        var argString = string.Join("_",
+            (args ?? [])
+            .Where(a => a is not null)
+            .Select(a => a?.ToString() ?? string.Empty)
+        );
 
         return $"repo:{typeof(T).Name}:{method.Name}:{argString}";
     }

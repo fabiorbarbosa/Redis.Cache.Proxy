@@ -1,13 +1,8 @@
 namespace Redis.Cache.Proxy.Data.Contexts;
 
-internal class FakeAsyncEnumerator<T> : IAsyncEnumerator<T>
+internal class FakeAsyncEnumerator<T>(IEnumerator<T> inner) : IAsyncEnumerator<T>
 {
-    private readonly IEnumerator<T> _inner;
-
-    public FakeAsyncEnumerator(IEnumerator<T> inner)
-    {
-        _inner = inner;
-    }
+    private readonly IEnumerator<T> _inner = inner;
 
     public T Current => _inner.Current;
 
@@ -18,7 +13,5 @@ internal class FakeAsyncEnumerator<T> : IAsyncEnumerator<T>
     }
 
     public ValueTask<bool> MoveNextAsync()
-    {
-        return ValueTask.FromResult(_inner.MoveNext());
-    }
+        => ValueTask.FromResult(_inner.MoveNext());
 }

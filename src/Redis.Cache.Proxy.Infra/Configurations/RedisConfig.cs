@@ -49,8 +49,8 @@ internal static class RedisConfig
             var attrImpl = typeof(TImplementation).GetCustomAttribute<RedisCachedAttribute>()
                 ?? throw new InvalidOperationException($"Type {typeof(TImplementation).FullName} must have a RedisCachedAttribute.");
 
-            return RedisProxyFactory.CreateWithRedisCache<TInterface, TImplementation>(
-                implementation, db, attrImpl.Expiration); ;
+            return RedisProxyFactory
+                .CreateWithRedisCache<TInterface, TImplementation>(implementation, db, attrImpl.Expiration);
         });
 
         return services;
