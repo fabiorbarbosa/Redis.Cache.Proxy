@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <PackageId>Redis.Cache.Proxy.Extensions</PackageId>
-    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionPrefix>1.0.1</VersionPrefix>
     <Authors>fabiorbarbosa</Authors>
     <Company>Simplify</Company>
     <Product>Redis Cache Proxy Extensions</Product>
