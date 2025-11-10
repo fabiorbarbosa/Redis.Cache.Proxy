@@ -8,12 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
-    <PackageReference Include="StackExchange.Redis" Version="2.8.41" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Redis.Cache.Proxy.Application\Redis.Cache.Proxy.Application.csproj" />
     <ProjectReference Include="..\Redis.Cache.Proxy.Data\Redis.Cache.Proxy.Data.csproj" />
+    <ProjectReference Include="..\Redis.Cache.Proxy.Extensions\Redis.Cache.Proxy.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

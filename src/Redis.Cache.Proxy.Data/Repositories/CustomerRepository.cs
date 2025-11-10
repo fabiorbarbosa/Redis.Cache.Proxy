@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using Redis.Cache.Proxy.Data.Contexts;
 using Redis.Cache.Proxy.Data.Entities;
-using Redis.Cache.Proxy.CrossCutting.Shared.Attributes;
+using Redis.Cache.Proxy.Extensions.Attributes;
 
 namespace Redis.Cache.Proxy.Data.Repositories;
 

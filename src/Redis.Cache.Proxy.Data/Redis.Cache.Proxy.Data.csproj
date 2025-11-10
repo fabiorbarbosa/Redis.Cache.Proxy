@@ -7,11 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="StackExchange.Redis" Version="2.8.41" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Redis.Cache.Proxy.CrossCutting\Redis.Cache.Proxy.CrossCutting.csproj" />
+    <ProjectReference Include="..\Redis.Cache.Proxy.Extensions\Redis.Cache.Proxy.Extensions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
