@@ -1,107 +1,99 @@
 # Redis.Cache.Proxy
 
-A modular .NET 9.0 project that provides a cache proxy using Redis, organized into multiple layers for maintainability and scalability.
+![Redis Cache Proxy logo](assets/redis-cache-proxy.svg)
 
-## Project Structure
+Modular .NET 9.0 sample showing how to wrap repositories behind a Redis-powered `DispatchProxy`, with a minimal API front-end, clean layering, and the `Redis.Cache.Proxy.Extensions` package ready for NuGet distribution.
+
+## Architecture Overview
 
 - **src/Redis.Cache.Proxy.Api/**  
-  Main API project exposing HTTP endpoints for cache and data interaction.
-- **src/Redis.Cache.Proxy.Extensions/**  
-  Redis DispatchProxy abstractions e extensões de DI preparados para publicação no NuGet.
-- **src/Redis.Cache.Proxy.Data/**  
-  Data access layer: entities, contexts, and repositories.
+  Minimal API exposing the `/cities` endpoints and wiring the entire stack.
 - **src/Redis.Cache.Proxy.Infra/**  
-  Infrastructure and dependency injection configuration.
-- **src/Redis.Cache.Proxy.Services/**  
-  Domain services, business logic, and integrations.
+  Dependency injection configuration (`DependencyInjectionConfig`) that registers Redis, contexts, services, and cached repositories.
+- **src/Redis.Cache.Proxy.Application/**  
+  Application services (`ICustomerService`, `CustomerService`) and DTOs consumed by the API.
+- **src/Redis.Cache.Proxy.Data/**  
+  Entities, fake in-memory context (`FakeDbSet`) and repositories marked with `[RedisCached]`.
+- **src/Redis.Cache.Proxy.Extensions/**  
+  Extractable library (NuGet-ready) containing attributes, factories, and helpers for the cache proxy.
 
-## How to Run
+## Redis.Cache.Proxy.Extensions
+
+### Key Features
+- `[RedisCached]` attribute to define custom TTL per repository.
+- `RedisCacheProxyServiceCollectionExtensions` helpers to register `IConnectionMultiplexer` and decorate repositories via `AddRedisCachedRepository<TInterface, TImplementation>()`.
+- `RedisCachingProxy` built on `DispatchProxy`, serializing results with `System.Text.Json`.
+- Deterministic cache key generation for LINQ expressions (`ExpressionExtensions` + `KeyExpressionVisitor`).
+- Multi-target build (`netstandard2.0`, `net6.0`, `net7.0`, `net8.0`) plus NuGet assets (`logo.png`, `redis-cache-proxy.svg`, README).
+
+### Install via NuGet
+Once published:
+```sh
+dotnet add package Redis.Cache.Proxy.Extensions
+```
+
+### Typical Usage
+```csharp
+services.AddRedisCacheProxy("localhost:6379");
+services.AddRedisCachedRepository<ICustomerRepository, CustomerRepository>(
+    defaultExpiration: TimeSpan.FromMinutes(30));
+```
+Add the attribute on the concrete repository:
+```csharp
+[RedisCached(expirationInMinutes: 5)]
+internal class CustomerRepository : ICustomerRepository { ... }
+```
+
+## Running locally
 
 ### Prerequisites
-
 - [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-- [Docker](https://www.docker.com/get-started) (for Redis)
-- Redis server running locally (via Docker) or remotely
+- [Docker](https://www.docker.com/get-started) to spin up Redis
 
-### Running Redis with Docker
-
-You can quickly start a Redis instance using Docker:
-
+### Start Redis via Docker
 ```sh
 docker run --name redis-cache -p 6379:6379 -d redis
 ```
 
-This will make Redis available at `localhost:6379`.
-
-### Running the Application Locally
-
-1. **Restore dependencies**
-   ```sh
-   dotnet restore Redis.Cache.Proxy.sln
-   ```
-
-2. **Build the solution**
-   ```sh
-   dotnet build Redis.Cache.Proxy.sln
-   ```
-
-3. **Run the API**
-   ```sh
-   dotnet run --project src/Redis.Cache.Proxy.Api/Redis.Cache.Proxy.Api.csproj
-   ```
+### Steps to run the API
+```sh
+dotnet restore Redis.Cache.Proxy.sln
+dotnet build Redis.Cache.Proxy.sln
+dotnet run --project src/Redis.Cache.Proxy.Api/Redis.Cache.Proxy.Api.csproj
+```
 
 ## API Documentation
+- **Swagger UI:** http://localhost:5000/docs  
+- **ReDoc:** http://localhost:5000/api-doc  
+- **Scalar:** http://localhost:5000/scalar  
 
-The project supports three documentation UIs:
+> Available when the app runs under the `Development` environment (see `Program.cs`).
 
-- **Swagger UI:**  
-  [http://localhost:5000/docs](http://localhost:5000/docs)
+### Sample Endpoints
+- `GET /cities` → returns all customers and total count.
+- `GET /cities/{city}` → filters customers by city (case-insensitive).
 
-- **ReDoc:**  
-  [http://localhost:5000/api-doc](http://localhost:5000/api-doc)
+## Technologies and tools
+- ASP.NET Core 9.0 (Minimal API + `AddProblemDetails` + `AddOutputCache`)
+- StackExchange.Redis 2.7.33
+- Swagger UI / ReDoc / Scalar for docs
+- Docker + official `redis` image
+- GitHub Actions to pack and publish the Extensions package
 
-- **Scalar:**  
-  [http://localhost:5000/scalar](http://localhost:5000/scalar)
-
-> All documentation endpoints are available when running in Development mode.
-
-## Example Endpoints
-
-- `GET /cities/{city}`  
-  Returns clients filtered by city.
-- `GET /cities`  
-  Returns all clients.
-
-## Main Technologies
-
-- ASP.NET Core 9.0
-- Redis (via StackExchange.Redis)
-- Swagger (Swashbuckle)
-- ReDoc
-- Scalar
-- Dependency Injection (Microsoft.Extensions.DependencyInjection)
-
-## Dockerfile Example (for Redis only)
-
-If you want to run Redis using Docker, you don't need a custom Dockerfile. Use the official Redis image as shown above.
-
-## Continuous Integration / NuGet
-
+## NuGet Publishing
 - Workflow: `.github/workflows/publish-extensions.yml`
-- Trigger: push a tag named `extensions-v*` (for example `extensions-v1.1.0`) or run the workflow manually via **Run workflow**.
-- Output: packs `src/Redis.Cache.Proxy.Extensions/Redis.Cache.Proxy.Extensions.csproj` in Release mode and pushes the resulting `.nupkg` to nuget.org.
-- Secret requirements: configure a repository secret `NUGET_API_KEY` containing a valid nuget.org API key with push permissions.
-- Before tagging: update the `<VersionPrefix>` (or related metadata) inside `src/Redis.Cache.Proxy.Extensions/Redis.Cache.Proxy.Extensions.csproj`, run `dotnet pack` locally to verify, then create and push the tag.
-- Assets shipped with the NuGet package: `README.md`, `logo.png` (icon) e o novo `redis-cache-proxy.svg` criado especialmente para a identidade visual do proxy.
+- Trigger: push tags `extensions-v*` (e.g., `extensions-v1.0.2`) or run manually.
+- Output: `dotnet pack` of `src/Redis.Cache.Proxy.Extensions/Redis.Cache.Proxy.Extensions.csproj` (Release) followed by `dotnet nuget push` to nuget.org.
+- Required secret: `NUGET_API_KEY` with push permission.
+- Before tagging: bump `<VersionPrefix>` in the `.csproj`, validate with `dotnet pack`, ensure assets (`README.md`, `logo.png`, `redis-cache-proxy.svg`) are up to date, then create/push the tag.
 
 ## Contributing
-
-1. Fork this repository
-2. Create your branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -am 'feat: your feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
+1. Fork this repository.
+2. Create a branch (`git checkout -b feature/my-feature`).
+3. Implement changes, add tests when relevant, and run `dotnet build`.
+4. Commit (`git commit -am 'feat: my feature'`) and push (`git push origin feature/my-feature`).
+5. Open a Pull Request describing API and/or NuGet package impacts.
 
 ---
 
-> This project is for educational purposes and demonstrates a modular architecture with
+> This repository is an educational guide on extracting a reusable Redis DispatchProxy extension while keeping a clean layered architecture.
