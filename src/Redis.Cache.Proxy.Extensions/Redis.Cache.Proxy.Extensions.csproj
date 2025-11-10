@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Redis.Cache.Proxy.Extensions</PackageId>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <Authors>fabiorbarbosa</Authors>
+    <Company>Simplify</Company>
+    <Product>Redis Cache Proxy Extensions</Product>
+    <Description>Helper extensions to register repositories behind a Redis-backed DispatchProxy, including caching attributes and DI helpers.</Description>
+    <PackageTags>redis;cache;dispatch-proxy;dotnet;dependency-injection</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/fabiorbarbosa/Redis.Cache.Proxy</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/fabiorbarbosa/Redis.Cache.Proxy</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>logo.png</PackageIcon>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReleaseNotes>Initial release of the Redis Cache Proxy extensions extracted from the sample project.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.33" />
+    <PackageReference Include="System.Reflection.DispatchProxy" Version="4.7.1" Condition=" '$(TargetFramework)' == 'netstandard2.0' " />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" Condition=" '$(TargetFramework)' == 'netstandard2.0' " />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\\..\\assets\\logo.png" Pack="true" PackagePath="\" Link="logo.png" />
+    <None Include="..\\..\\assets\\redis-cache-proxy.svg" Pack="true" PackagePath="\" Link="redis-cache-proxy.svg" />
+  </ItemGroup>
+</Project>

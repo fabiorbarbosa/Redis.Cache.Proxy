@@ -6,8 +6,8 @@ A modular .NET 9.0 project that provides a cache proxy using Redis, organized in
 
 - **src/Redis.Cache.Proxy.Api/**  
   Main API project exposing HTTP endpoints for cache and data interaction.
-- **src/Redis.Cache.Proxy.CrossCutting/**  
-  Shared utilities and cross-cutting concerns.
+- **src/Redis.Cache.Proxy.Extensions/**  
+  Redis DispatchProxy abstractions e extensões de DI preparados para publicação no NuGet.
 - **src/Redis.Cache.Proxy.Data/**  
   Data access layer: entities, contexts, and repositories.
 - **src/Redis.Cache.Proxy.Infra/**  
@@ -84,6 +84,15 @@ The project supports three documentation UIs:
 ## Dockerfile Example (for Redis only)
 
 If you want to run Redis using Docker, you don't need a custom Dockerfile. Use the official Redis image as shown above.
+
+## Continuous Integration / NuGet
+
+- Workflow: `.github/workflows/publish-extensions.yml`
+- Trigger: push a tag named `extensions-v*` (for example `extensions-v1.1.0`) or run the workflow manually via **Run workflow**.
+- Output: packs `src/Redis.Cache.Proxy.Extensions/Redis.Cache.Proxy.Extensions.csproj` in Release mode and pushes the resulting `.nupkg` to nuget.org.
+- Secret requirements: configure a repository secret `NUGET_API_KEY` containing a valid nuget.org API key with push permissions.
+- Before tagging: update the `<VersionPrefix>` (or related metadata) inside `src/Redis.Cache.Proxy.Extensions/Redis.Cache.Proxy.Extensions.csproj`, run `dotnet pack` locally to verify, then create and push the tag.
+- Assets shipped with the NuGet package: `README.md`, `logo.png` (icon) e o novo `redis-cache-proxy.svg` criado especialmente para a identidade visual do proxy.
 
 ## Contributing
 

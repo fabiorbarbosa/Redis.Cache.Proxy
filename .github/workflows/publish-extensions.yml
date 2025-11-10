@@ -1,0 +1,44 @@
+name: Publish Redis Cache Proxy Extensions
+
+on:
+  push:
+    tags:
+      - extensions-v*
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PROJECT_PATH: src/Redis.Cache.Proxy.Extensions/Redis.Cache.Proxy.Extensions.csproj
+  ARTIFACTS_DIR: artifacts
+  NUGET_SOURCE: https://api.nuget.org/v3/index.json
+
+jobs:
+  pack-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore $PROJECT_PATH
+
+      - name: Pack Redis Cache Proxy Extensions
+        run: dotnet pack $PROJECT_PATH --configuration Release --no-restore --output $ARTIFACTS_DIR /p:ContinuousIntegrationBuild=true
+
+      - name: Publish package to nuget.org
+        if: github.event_name != 'workflow_dispatch' || secrets.NUGET_API_KEY != ''
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          if [ -z "$NUGET_API_KEY" ]; then
+            echo "NUGET_API_KEY secret is missing. Configure it in the repository settings."
+            exit 1
+          fi
+          dotnet nuget push "$ARTIFACTS_DIR"/*.nupkg --source "$NUGET_SOURCE" --api-key "$NUGET_API_KEY" --skip-duplicate
