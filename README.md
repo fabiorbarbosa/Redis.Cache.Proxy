@@ -1,6 +1,8 @@
 # Redis.Cache.Proxy
 
-<img src="assets/redis-cache-proxy.svg" alt="Redis Cache Proxy logo" width="200" />
+<p align="center">
+  <img src="assets/redis-cache-proxy.svg" alt="Redis Cache Proxy logo" width="200" />
+</p>
 
 Modular .NET 9.0 sample showing how to wrap repositories behind a Redis-powered `DispatchProxy`, with a minimal API front-end, clean layering, and the `Redis.Cache.Proxy.Extensions` package ready for NuGet distribution.
 
