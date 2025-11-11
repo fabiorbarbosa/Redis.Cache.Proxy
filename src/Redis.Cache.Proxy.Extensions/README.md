@@ -1,42 +1,48 @@
 # Redis.Cache.Proxy.Extensions
 
-Extensões para simplificar o uso de `DispatchProxy` e Redis em projetos que desejam decorar repositórios com cache transparente. O pacote expõe atributos e métodos de DI para registrar o `IConnectionMultiplexer`, aplicar o proxy e controlar a expiração via `RedisCachedAttribute`.
+<p align="center">
+  <img src="redis-cache-proxy.svg" alt="Redis Cache Proxy logo" width="160" />
+</p>
 
-## Instalação
+Helpers that wrap repositories behind a Redis-backed `DispatchProxy`, exposing attributes and DI extensions so you can enable transparent caching with a single registration call.
+
+## Installation
 
 ```bash
 dotnet add package Redis.Cache.Proxy.Extensions
 ```
 
-## Uso rápido
+## Quick start
 
-1. **Registrar Redis** (por connection string ou com uma factory):
+1. **Register Redis** (connection string or factory):
 
 ```csharp
 services.AddRedisCacheProxy("localhost:6379");
+// or services.AddRedisCacheProxy(provider => ConnectionMultiplexer.Connect(...));
 ```
 
-2. **Marcar o repositório** com o atributo opcional para definir a expiração default:
+2. **Annotate the repository** (optional TTL override):
 
 ```csharp
 [RedisCached(expirationInMinutes: 5)]
-public class CustomerRepository : ICustomerRepository
+internal class CustomerRepository : ICustomerRepository
 {
     // ...
 }
 ```
 
-3. **Aplicar o proxy** na DI para expor a interface decorada:
+3. **Expose the interface through the proxy**:
 
 ```csharp
-services.AddRedisCachedRepository<ICustomerRepository, CustomerRepository>();
+services.AddRedisCachedRepository<ICustomerRepository, CustomerRepository>(
+    defaultExpiration: TimeSpan.FromMinutes(30));
 ```
 
-O proxy intercepta métodos síncronos e `Task`/`Task<T>` gerando chaves determinísticas a partir dos argumentos ou `Expression<Func<T,bool>>`.
+The proxy intercepts sync and async methods (`Task` / `Task<T>`), generating deterministic cache keys from method arguments or `Expression<Func<T,bool>>` filters.
 
-## Recursos
+## Features
 
-- Registro de `IConnectionMultiplexer` pronto para produção.
-- Atributo `RedisCachedAttribute` com tempo de expiração configurável.
-- Geração de chaves compatível com queries por expressão (`Contains`, `BinaryExpression`, etc.).
-- Preparado para multi-target (`netstandard2.0`, `net6.0`, `net7.0`, `net8.0`) e publicação no NuGet (README, ícone e símbolos inclusos).
+- Production-ready `IConnectionMultiplexer` registration helpers.
+- `RedisCachedAttribute` with configurable expiration and sane defaults.
+- Deterministic cache key generation for expression-based queries (`Contains`, `BinaryExpression`, etc.).
+- Multi-target (`netstandard2.0`, `net6.0`, `net7.0`, `net8.0`) with NuGet assets included (`README`, `logo.png`, `redis-cache-proxy.svg`, symbol packages).
