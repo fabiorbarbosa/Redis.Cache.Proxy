@@ -1,4 +1,4 @@
-namespace Redis.Cache.Proxy.Extensions.Attributes;
+namespace Simplify.Cache.Proxy.Attributes;
 
 /// <summary>
 /// Marks a concrete repository so it can be wrapped by a Redis DispatchProxy with a custom expiration.

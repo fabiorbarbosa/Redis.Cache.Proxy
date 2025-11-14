@@ -2,7 +2,7 @@ using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Redis.Cache.Proxy.Extensions.Internal;
+namespace Simplify.Cache.Proxy.Internal;
 
 internal sealed class KeyExpressionVisitor : ExpressionVisitor
 {

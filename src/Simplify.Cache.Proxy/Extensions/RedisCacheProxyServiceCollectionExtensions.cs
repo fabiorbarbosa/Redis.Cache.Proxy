@@ -1,10 +1,10 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Redis.Cache.Proxy.Extensions.Attributes;
-using Redis.Cache.Proxy.Extensions.Internal;
+using Simplify.Cache.Proxy.Attributes;
+using Simplify.Cache.Proxy.Internal;
 using StackExchange.Redis;
 
-namespace Redis.Cache.Proxy.Extensions;
+namespace Simplify.Cache.Proxy;
 
 /// <summary>
 /// Service collection helpers to wire Redis caching proxies through DI.

@@ -1,7 +1,7 @@
 using System.Reflection;
 using StackExchange.Redis;
 
-namespace Redis.Cache.Proxy.Extensions.Internal;
+namespace Simplify.Cache.Proxy.Internal;
 
 internal static class RedisProxyFactory
 {

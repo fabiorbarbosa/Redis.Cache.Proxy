@@ -1,10 +1,10 @@
-# Redis.Cache.Proxy.Extensions
+# Simplify.Cache.Proxy
 
 <p align="center">
   <img src="redis-cache-proxy.svg" alt="Redis Cache Proxy logo" width="160" />
 </p>
 
-Helpers that wrap repositories behind a Redis-backed `DispatchProxy`, exposing attributes and DI extensions so you can enable transparent caching with a single registration call.
+Helpers that wrap repositories behind a Redis-backed `DispatchProxy`, exposing attributes and DI extensions via the `Simplify.Cache.Proxy` namespace so you can enable transparent caching with a single registration call.
 
 ## Installation
 

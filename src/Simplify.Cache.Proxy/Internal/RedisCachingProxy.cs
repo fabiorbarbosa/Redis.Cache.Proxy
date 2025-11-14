@@ -4,9 +4,9 @@ using System.Reflection;
 using System.Text.Json;
 using StackExchange.Redis;
 
-namespace Redis.Cache.Proxy.Extensions.Internal;
+namespace Simplify.Cache.Proxy.Internal;
 
-internal sealed class RedisCachingProxy<TImplementation> : DispatchProxy
+internal class RedisCachingProxy<TImplementation> : DispatchProxy
 {
     private static readonly TimeSpan DefaultExpiration = TimeSpan.FromMinutes(30);
 
