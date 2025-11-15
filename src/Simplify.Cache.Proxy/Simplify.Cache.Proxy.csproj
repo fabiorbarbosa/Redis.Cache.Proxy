@@ -7,23 +7,23 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>Redis.Cache.Proxy.Extensions</PackageId>
+    <PackageId>Simplify.Cache.Proxy.Extensions</PackageId>
     <VersionPrefix>1.0.7</VersionPrefix>
     <Authors>fabiorbarbosa</Authors>
     <Company>Simplify</Company>
-    <Product>Redis Cache Proxy Extensions</Product>
+    <Product>Simplify Cache Proxy Extensions</Product>
     <Description>Helper extensions to register repositories behind a Redis-backed DispatchProxy, including caching attributes and DI helpers.</Description>
     <PackageTags>redis;cache;dispatch-proxy;dotnet;dependency-injection</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/fabiorbarbosa/Redis.Cache.Proxy</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/fabiorbarbosa/Redis.Cache.Proxy</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/fabiorbarbosa/Simplify.Cache.Proxy</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/fabiorbarbosa/Simplify.Cache.Proxy</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>logo.png</PackageIcon>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageReleaseNotes>Initial release of the Redis Cache Proxy extensions extracted from the sample project.</PackageReleaseNotes>
+    <PackageReleaseNotes>Initial release of the Simplify Cache Proxy extensions extracted from the sample project.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

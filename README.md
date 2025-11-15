@@ -1,4 +1,4 @@
-# Redis.Cache.Proxy
+# Simplify.Cache.Proxy
 
 <p align="center">
   <img src="assets/redis-cache-proxy.svg" alt="Redis Cache Proxy logo" width="200" />
@@ -20,7 +20,7 @@ Biblioteca reutilizável que demonstra como encapsular repositórios atrás de u
 
 ### Instalação (NuGet)
 ```sh
-dotnet add package Redis.Cache.Proxy.Extensions
+dotnet add package Simplify.Cache.Proxy.Extensions
 ```
 
 ### Uso típico
@@ -43,9 +43,9 @@ internal sealed class CustomerRepository : ICustomerRepository
 
 ### Restaurar, compilar e testar
 ```sh
-dotnet restore Redis.Cache.Proxy.sln
-dotnet build Redis.Cache.Proxy.sln -c Release
-dotnet test Redis.Cache.Proxy.sln
+dotnet restore Simplify.Cache.Proxy.sln
+dotnet build Simplify.Cache.Proxy.sln -c Release
+dotnet test Simplify.Cache.Proxy.sln
 ```
 
 ### Empacotar a extensão

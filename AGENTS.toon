@@ -1,0 +1,47 @@
+# AGENTS.toon — Simplify.Cache.Proxy
+
+## Baseline
+- Diretórios principais: `src/` para a biblioteca multi-target, `tests/` para a suíte xUnit, `assets/` para README/ícones usados no pacote e `Dockerfile` para um Redis local (imagem `redis:alpine` atualizada via `apk update && apk upgrade --no-cache` e expondo 6379).
+- A solução raiz `Simplify.Cache.Proxy.sln` contém somente a biblioteca `Simplify.Cache.Proxy` e o projeto de testes `Simplify.Cache.Proxy.Tests`; qualquer mudança que afete build/test precisa manter ambos em sincronia.
+- Sempre validar o pacote multi-target com `dotnet pack src/Simplify.Cache.Proxy/Simplify.Cache.Proxy.csproj -c Release -o ./artifacts` antes da publicação para garantir que README (`README.md`) e ícones (`assets/logo.png`, `assets/redis-cache-proxy.svg`) continuam incluídos.
+- Preferir mocks/fakes em memória para Redis (NSubstitute sobrescrevendo `IDatabase` e `IConnectionMultiplexer`); o container Redis do `Dockerfile` é apenas para exploração manual.
+- Comunicação sempre técnica, objetiva e levemente criativa: explique implicações arquiteturais ao propor mudanças e aponte lacunas de testes quando aparecerem.
+
+## Stack: .NET + Redis
+
+### Missão do Agente
+- Evoluir a biblioteca `Simplify.Cache.Proxy` (namespace `Simplify.Cache.Proxy`) garantindo que continue pronta para o NuGet, com geração determinística de chaves, proxies `DispatchProxy` e políticas de expiração coerentes, além de manter a suíte `Simplify.Cache.Proxy.Tests` cobrindo DI, TTLs e hits/misses em Redis.
+
+### Stack Info
+- Biblioteca multi-target `netstandard2.0`, `net6.0`, `net7.0`, `net8.0` (C# 12, `Nullable`/`ImplicitUsings` habilitados); pacote publicado como `Simplify.Cache.Proxy.Extensions` com símbolo (`snupkg`), README e ícone (`PackageReadmeFile`, `PackageIcon`).
+- Dependências principais: `StackExchange.Redis 2.7.33`, `Microsoft.Extensions.DependencyInjection.Abstractions 8.0.2`, `System.Reflection.DispatchProxy 4.7.1` (apenas para `netstandard2.0`), `System.Text.Json 8.0.5`.
+- Projeto de testes `net8.0` com `xunit 2.9.0`, `FluentAssertions 6.12.0`, `NSubstitute 5.1.0`, `Microsoft.NET.Test.Sdk 17.10.0`, além de `Microsoft.Extensions.DependencyInjection 8.0.0` para montar DI real.
+- Infra complementar: `Dockerfile` baseado em `redis:alpine` para subir um Redis local opcional; nenhuma outra stack (Angular, Node, Flutter etc.) está presente.
+
+### Arquitetura de Código e Pastas
+- `src/Simplify.Cache.Proxy/Attributes/RedisCachedAttribute.cs` (TTL obrigatório com fallback mínimo 30 min), `RedisCacheProxyServiceCollectionExtensions` para registrar `IConnectionMultiplexer` via string ou factory e decorar repositórios com `AddRedisCachedRepository<TInterface,TImplementation>()`.
+- `Internal/RedisCachingProxy` implementa `DispatchProxy` que serializa com `System.Text.Json`, gera chaves com `ExpressionExtensions` + `KeyExpressionVisitor`, faz cache hit/miss para métodos sync/async e aplica TTL vindo do atributo ou `defaultExpiration`.
+- `Internal/RedisProxyFactory` permanece `internal` e deve ser exercitada via DI nos testes; mantém separação entre geração de proxy e registro no container.
+- `tests/Simplify.Cache.Proxy.Tests/` cobre DI (`AddRedisCacheProxy`/`AddRedisCachedRepository`), geração de chaves (`ExpressionExtensions`, `KeyExpressionVisitor` e cenários `Contains`, `==`, múltiplos parâmetros) e comportamento do `RedisCachingProxy` para TTLs, hits/misses e métodos síncronos/assíncronos usando NSubstitute.
+
+### Ferramentas e Scripts
+- Restaurar dependências: `dotnet restore Simplify.Cache.Proxy.sln`
+- Compilar em Release: `dotnet build Simplify.Cache.Proxy.sln -c Release`
+- Testar: `dotnet test Simplify.Cache.Proxy.sln`
+- Empacotar: `dotnet pack src/Simplify.Cache.Proxy/Simplify.Cache.Proxy.csproj -c Release -o ./artifacts`
+- Opcional: `dotnet format` antes de abrir PRs para manter estilos consistentes.
+
+### Checklist de PR
+- Garantir `dotnet restore`, `dotnet build` e `dotnet test` sem erros ou novos warnings.
+- Alterações na biblioteca → rodar `dotnet pack` para validar todos os TFMs e confirmar inclusão de README/ícones no nupkg.
+- Expandir a suíte de testes ao introduzir novos comportamentos (mockando Redis); mantenha casos para TTLs, geração de chaves e DI.
+- Atualizar `README.md`/`AGENTS.toon` quando processos, pacotes ou comandos mudarem.
+
+### Regras de Segurança e Performance
+- Nunca versionar strings de conexão reais; manter overloads de `AddRedisCacheProxy` aceitando string ou factory/multiplexer existente.
+- Validar TTLs positivos; `RedisCachedAttribute` precisa continuar impondo mínimo de 30 minutos quando nada é informado.
+- O proxy deve permanecer thread-safe, evitar bloqueio em chamadas async e preservar o prefixo de chave `repo:{Repo}:{Method}:...` para não invalidar caches existentes.
+- Serialização `System.Text.Json` precisa continuar livre de referências circulares; DTOs retornados devem permanecer serializáveis.
+
+### Estilo de Comunicação
+- Responder de forma técnica e direta, com espírito analítico/creativo: cite arquivos e linhas (`src/Simplify.Cache.Proxy/Internal/RedisCachingProxy.cs:42`) ao justificar decisões, explique impactos arquiteturais e destaque lacunas de testes ou próximos passos quando apropriado.
