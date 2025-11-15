@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 env:
-  PROJECT_PATH: src/Redis.Cache.Proxy.Extensions/Redis.Cache.Proxy.Extensions.csproj
+  PROJECT_PATH: src/Simplify.Cache.Proxy/Simplify.Cache.Proxy.csproj
   ARTIFACTS_DIR: artifacts
   NUGET_SOURCE: https://api.nuget.org/v3/index.json
 
