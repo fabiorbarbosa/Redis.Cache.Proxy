@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <PackageId>Simplify.Cache.Proxy.Extensions</PackageId>
-    <VersionPrefix>1.0.8</VersionPrefix>
+    <VersionPrefix>1.0.9</VersionPrefix>
     <Authors>fabiorbarbosa</Authors>
     <Company>Simplify</Company>
     <Product>Simplify Cache Proxy Extensions</Product>
